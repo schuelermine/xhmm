@@ -1,3 +1,7 @@
 {
-  imports = [ ./languages ];
+  imports = [
+    ./languages
+    ./desktop
+    ./console
+  ];
 }
