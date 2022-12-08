@@ -1,8 +1,4 @@
 {
-  imports = [
-    ./appearance.nix
-    ./cursor-theme.nix
-    ./extensions.nix
-    ./fonts.nix
-  ];
+  imports =
+    [ ./appearance.nix ./cursor-theme.nix ./extensions.nix ./fonts.nix ];
 }

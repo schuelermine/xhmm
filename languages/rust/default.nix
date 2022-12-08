@@ -1,6 +1,5 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
-{
+with builtins // lib; {
   imports = [
     ./cargo.nix
     ./clippy.nix

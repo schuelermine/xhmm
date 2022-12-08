@@ -29,7 +29,8 @@ in {
               default = "Adwaita";
               defaultText = literalExpression ''"Adwaita"'';
               example = literalExpression ''"Yaru"'';
-              description = "Name of the custom shell theme within the package.";
+              description =
+                "Name of the custom shell theme within the package.";
             };
           };
         }];
@@ -38,7 +39,8 @@ in {
   };
   config = mkMerge [
     (mkIf (cfg.shellTheme != null) {
-      home.packages = mkIf (cfg.shellTheme.package != null) [ cfg.shellTheme.package ];
+      home.packages =
+        mkIf (cfg.shellTheme.package != null) [ cfg.shellTheme.package ];
       gnome.extensions.enabledExtensions = [ pkgs.gnomeExtensions.user-themes ];
       dconf.settings."org/gnome/shell/extensions/user-theme".name =
         cfg.shellTheme.name;

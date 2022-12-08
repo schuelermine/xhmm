@@ -1,3 +1,1 @@
-{
-  imports = [ ./prompt.nix ];
-}
+{ imports = [ ./prompt.nix ]; }

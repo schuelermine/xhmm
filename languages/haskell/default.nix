@@ -2,13 +2,7 @@
 with builtins // lib;
 let cfg = config.programs.haskell;
 in {
-  imports = [
-    ./cabal.nix
-    ./ghc.nix
-    ./ghcup.nix
-    ./hls.nix
-    ./stack.nix
-  ];
+  imports = [ ./cabal.nix ./ghc.nix ./ghcup.nix ./hls.nix ./stack.nix ];
   options.programs.haskell = {
     ghcVersionName = mkOption {
       type = with types; nullOr str;

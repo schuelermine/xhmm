@@ -2,11 +2,7 @@
 with builtins // lib;
 let cfg = config.programs.python;
 in {
-  imports = [
-    ./mypy.nix
-    ./pip.nix
-    ./pytest.nix
-  ];
+  imports = [ ./mypy.nix ./pip.nix ./pytest.nix ];
   options.programs.python = {
     versionName = mkOption {
       type = with types; nullOr str;

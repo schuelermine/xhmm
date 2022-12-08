@@ -1,7 +1,1 @@
-{
-  imports = [
-    ./haskell
-    ./python
-    ./rust
-  ];
-}
+{ imports = [ ./haskell ./python ./rust ]; }
