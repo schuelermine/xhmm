@@ -13,7 +13,7 @@ in {
       else
         x;
     description = ''
-      Expose the rust library source code via the <envar>RUST_SRC_PATH</envar> variable.
+      Expose the rust library source code via the <code>RUST_SRC_PATH</code> variable.
       If set to null, the variable remains unset.
       If set to true, use the value <code>config.programs.rust.toolchainPackages.rustPlatform.rustLibSrc</code>.
     '';
