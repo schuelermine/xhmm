@@ -15,7 +15,17 @@ Current contents:
         - ⚠️ Requires `program-variables`
     - `nano`: More options for `nano`
     - `program-variables`: Program variables
-        - `
+        - `$PAGER`
+        - `$EDITOR`
+        - `$VISUAL`
+- `desktop`: Desktop configuration
+    - `gnome`: GNOME configuration
+        - Shell theme
+        - GTK theme
+        - Cursor theme
+        - Extensions
+        - Fonts
+    - `fonts`: Alias for `home.packages` for fonts
 - `languages`: Programming languages
     - `haskell`: Haskell
         - Cabal
