@@ -1,0 +1,3 @@
+{
+  imports = [ ./prompt.nix ];
+}

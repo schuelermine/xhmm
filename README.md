@@ -8,6 +8,14 @@ You are encouraged to look through the code yourself! All options have been desc
 
 Current contents:
 
+- `console`: Shell things
+    - `fish`: Fish
+        - Fish prompt
+    - `less`: More options for `less`
+        - ⚠️ Requires `program-variables`
+    - `nano`: More options for `nano`
+    - `program-variables`: Program variables
+        - `
 - `languages`: Programming languages
     - `haskell`: Haskell
         - Cabal
