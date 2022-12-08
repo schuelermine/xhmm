@@ -4,6 +4,7 @@ let
   cfg = config.programs.python.pip;
   iniFormat = pkgs.formats.ini { };
 in {
+  imports = [ ./. ];
   options.programs.python.pip = {
     enable = mkEnableOption "pip";
     package = mkPackageOption config.programs.python.pythonPackages "pip" { };

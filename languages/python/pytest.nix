@@ -2,6 +2,7 @@
 with builtins // lib;
 let cfg = config.programs.python.pytest;
 in {
+  imports = [ ./. ];
   options.programs.python.pytest = {
     enable = mkEnableOption "pytest";
     package =
