@@ -35,7 +35,7 @@ in {
       type = with types; listOf str;
       description = "The GHC Versions to support with HLS.";
       default = [ ];
-      defaultText = literalExpression "null";
+      defaultText = literalExpression "[ ]";
       example = literalExpression ''[ "902" ]'';
     };
   };
