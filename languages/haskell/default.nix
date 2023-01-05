@@ -1,13 +1,16 @@
 { config, pkgs, lib, ... }:
 with builtins // lib;
-let cfg = config.programs.haskell;
+let
+  cfg = config.programs.haskell;
+  compactV = replaceStrings [ "." ] [ "" ];
 in {
   imports = [ ./cabal.nix ./ghc.nix ./ghcup.nix ./hls.nix ./stack.nix ];
   options.programs.haskell = {
     ghcVersionName = mkOption {
       type = with types; nullOr str;
       apply = opt:
-        if opt != null then replaceStrings [ "." ] [ "" ] opt else null;
+        if opt != null then
+          compactV opt else null;
       description = ''
         The GHC version to use.
         Setting this value automatically sets <code>programs.haskell.haskellPackages</code>.
@@ -16,6 +19,14 @@ in {
       default = null;
       defaultText = literalExpression "null";
       example = literalExpression ''"942"'';
+    };
+    effectiveGhcVersionName = mkOption {
+      type = types.str;
+      description = ''
+        Do not set this value. Used internally to get the computed GHC version name.
+      '';
+      default = if cfg.ghcVersionName != null then cfg.ghcVersionName
+        else compactV cfg.haskellPackages.ghc.version;
     };
     haskellPackages = mkOption {
       type = types.raw;

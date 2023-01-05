@@ -2,7 +2,6 @@
 with builtins // lib;
 let
   cfg = config.programs.haskell.hls;
-  ghcVersionName = config.programs.haskell.ghcVersionName;
   warning = ''
     You have provided a package as programs.haskell.language-server.package that doesn't allow overriding supportedGhcPackages.
     This disables specifying supported GHC versions via programs.haskell.hls.extraSupportedGhcVersions.
@@ -15,17 +14,11 @@ in {
       mkPackageOption pkgs "HLS" { default = [ "haskell-language-server" ]; }
       // {
         apply = pkg:
-          if ghcVersionName != null then
-            if pkg ? override.__functionArgs.supportedGhcVersions then
-              pkg.override {
-                supportedGhcVersions = [ ghcVersionName ]
-                  ++ cfg.extraSupportedGhcVersions;
-              }
-            else
-              trace warning pkg
-          else if pkg ? override.__functionArgs.supportedGhcVersions then
+          if pkg ? override.__functionArgs.supportedGhcVersions then
             pkg.override {
-              supportedGhcVersions = cfg.extraSupportedGhcVersions;
+              supportedGhcVersions =
+                [ config.programs.haskell.effectiveGhcVersionName ]
+                ++ cfg.extraSupportedGhcVersions;
             }
           else
             trace warning pkg;
