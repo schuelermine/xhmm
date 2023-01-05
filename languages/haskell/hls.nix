@@ -16,7 +16,8 @@ in {
       // {
         apply = pkg:
           if ghcVersionName != null then
-            if pkg.override.__functionArgs ? supportedGhcVersions then
+            if pkg ? override && pkgs.override ? __functionArgs
+            && pkg.override.__functionArgs ? supportedGhcVersions then
               pkg.override {
                 supportedGhcVersions = [ ghcVersionName ]
                   ++ cfg.extraSupportedGhcVersions;
