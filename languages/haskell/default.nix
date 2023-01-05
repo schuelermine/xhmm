@@ -22,9 +22,7 @@ in {
     };
     effectiveGhcVersionName = mkOption {
       type = types.str;
-      description = ''
-        Do not set this value. Used internally to get the computed GHC version name.
-      '';
+      internal = true;
       default = if cfg.ghcVersionName != null then cfg.ghcVersionName
         else compactV cfg.haskellPackages.ghc.version;
     };
