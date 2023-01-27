@@ -24,7 +24,6 @@ in {
     };
   };
   config.home = mkIf cfg.enable {
-    packages = [ cfg.package ];
     file.".cargo/config.toml" = mkIf (cfg.settings != null) {
       source = tomlFormat.generate "cargo-config" cfg.settings;
     };
