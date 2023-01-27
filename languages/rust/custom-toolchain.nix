@@ -64,7 +64,7 @@ in {
       example = literalExpression ''[ "wasm32-unknown-unknown" "thumbv2-none-eabi" ]'';
     };
     profile = mkOption {
-      type = with types; listOf (enum [ "minimal" "default" "complete" ]);
+      type = with types; enum [ "minimal" "default" "complete" ];
       description = ''
         The base toolchain profile.
         Can be <code>"minimal"</code>, <code>"default"</code>, or <code>"complete"</code>.

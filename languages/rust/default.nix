@@ -20,7 +20,7 @@ let
     toTOML toolchainConfig;
   toolchainConfig.toolchain =
     optionalAttrs (cT.channel != null) { inherit (cT) channel; }
-    // optionalAttrs (cT.components != null || componets != [ ]) {
+    // optionalAttrs (cT.components != null || components != [ ]) {
       components = cT.components ++ components;
     } // optionalAttrs (cT.targets != null) { inherit (cT) targets; }
     // optionalAttrs (cT.profile != null) { inherit (cT) targets; };
