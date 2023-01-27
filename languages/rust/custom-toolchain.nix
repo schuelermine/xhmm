@@ -40,7 +40,7 @@ in {
         Null to disable.
       '';
       default = null;
-      defaultExt = literalExpression "null";
+      defaultText = literalExpression "null";
       example = literalExpression ''"nightly-2020-07-10"'';
     };
     components = mkOption {
@@ -50,7 +50,7 @@ in {
         Null to disable.
       '';
       default = null;
-      defaultExt = literalExpression "null";
+      defaultText = literalExpression "null";
       example = literalExpression ''[ "rustfmt" "rustc-dev" ]'';
     };
     targets = mkOption {
@@ -60,7 +60,7 @@ in {
         Null to disable.
       '';
       default = null;
-      defaultExt = literalExpression "null";
+      defaultText = literalExpression "null";
       example = literalExpression ''[ "wasm32-unknown-unknown" "thumbv2-none-eabi" ]'';
     };
     profile = mkOption {
