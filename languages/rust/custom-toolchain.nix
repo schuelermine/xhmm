@@ -3,15 +3,15 @@ with builtins // lib;
 let cfg = config.programs.rust.customToolchain;
 in {
   options.programs.rust.customToolchain = {
-    toolchain = mkOption {
+    toolchainPackage = mkOption {
       type = with types; nullOr package;
       description = ''
         A toolchain package to install.
-        Overrides <code>programs.rust.customToolchain.builder</code>.
+        Disables <code>programs.rust.customToolchain.builder</code>.
       '';
       default = null;
       defaultText = literalExpression "null";
-      example = literalExpression "fenix.fromManifestFile ./rust-toolchain.toml";
+      example = literalExpression "fenix.stable.toolchain";
     };
     builder = mkOption {
       type = with types; nullOr (functionTo (attrsOf package));
@@ -21,7 +21,7 @@ in {
       '';
       default = null;
       defaultText = literalExpression "null";
-      example = literalExpression "fenix.fromManifestFile";
+      example = literalExpression ''file: fenix.fromToolchainFile { inherit file; sha256 = "" }'';
     };
     format = mkOption {
       type = types.enum [ "attrs" "path" ];
