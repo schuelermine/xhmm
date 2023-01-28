@@ -11,20 +11,16 @@ let
   else
     [ toolchain ];
   toolchain =
-    if cT.toolchain != null then cT.builder toolchainArg else cT.toolchain;
+    if cT.toolchain == null then cT.builder toolchainArg else cT.toolchain;
   toolchainArg = if cT.config != null then
     if cT.format == "path" then cT.config else fromTOML cT.config
   else if cT.format == "attrs" then
     toolchainConfig
   else
     toTOML toolchainConfig;
-  toolchainConfig.toolchain =
-    optionalAttrs (cT.channel != null) { inherit (cT) channel; }
-    // optionalAttrs (cT.components != null || components != [ ]) {
-      components = cT.components ++ components;
-    } // optionalAttrs (cT.targets != null) { inherit (cT) targets; }
-    // optionalAttrs (cT.profile != null) { inherit (cT) targets; };
-  components = optional cfg.cargo.enable "cargo"
+  toolchainConfig.toolchain = optionalAttrs (cT.channel != null) { inherit (cT) channel; } // optionalAttrs (components != [ ]) { inherit components; } // optionalAttrs (cT.targets != null) { inherit (cT) targets; } // optionalAttrs (cT.targets != null) { inherit (cT) targets; };
+  components = (if cT.components == null then [ ] else cT.components) ++ declaredComponents;
+  declaredComponents = optional cfg.cargo.enable "cargo"
     ++ optional cfg.clippy.enable "clippy" ++ optional cfg.rustc.enable "rustc"
     ++ optional cfg.rustfmt.enable "rustfmt";
   tomlFormat = pkgs.formats.toml { };
