@@ -3,7 +3,7 @@ with builtins // lib;
 let
   cfg = config.programs.rust;
   cT = cfg.customToolchain;
-  packages = if cT.builder == null then
+  packages = if cT.builder == null && cT.toolchainPackage == null then
     optional cfg.cargo.enable cfg.cargo.package
     ++ optional cfg.clippy.enable cfg.clippy.package
     ++ optional cfg.rustc.enable cfg.rustc.package
