@@ -11,7 +11,7 @@ let
   else
     [ toolchain ];
   toolchain =
-    if cT.toolchain == null then cT.builder toolchainArg else cT.toolchain;
+    if cT.toolchainPackage == null then cT.builder toolchainArg else cT.toolchainPackage;
   toolchainArg = if cT.config != null then
     if cT.format == "path" then cT.config else fromTOML cT.config
   else if cT.format == "attrs" then
