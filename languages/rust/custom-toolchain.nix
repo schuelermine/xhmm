@@ -14,7 +14,7 @@ in {
       example = literalExpression "fenix.stable.toolchain";
     };
     builder = mkOption {
-      type = with types; nullOr (functionTo (attrsOf package));
+      type = with types; nullOr (functionTo raw);
       description = ''
         A custom toolchain builder that takes a TOML toolchain specification
         and returns a derivation to be installed. Set to <code>null</code> to disable.
