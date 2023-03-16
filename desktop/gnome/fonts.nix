@@ -3,7 +3,7 @@ with lib;
 let
   mkFontOption = desc:
     mkOption {
-      type = hm.types.fontType;
+      type = types.nullOr hm.types.fontType;
       default = null;
       description = desc;
     };
