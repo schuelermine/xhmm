@@ -15,9 +15,12 @@ in {
       example = ''"set atblanks"'';
     };
   };
-  config.home = mkIf cfg.enable {
-    packages = [ cfg.package ];
-    file.".nanorc" = mkIf (cfg.config != null) { text = cfg.config; };
-    editor = "${cfg.package}/bin/nano";
-  };
+  config = mkMerge [{
+    home = mkIf cfg.enable {
+      packages = [ cfg.package ];
+      editor = "${cfg.package}/bin/nano";
+    };
+  } {
+    home.file.".nanorc".text = cfg.config;
+  }];
 }

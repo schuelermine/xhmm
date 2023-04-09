@@ -14,6 +14,7 @@ Current contents:
     - `less`: More options for `less`
         - ⚠️ Requires `program-variables`
     - `nano`: More options for `nano`
+        - ⚠️ Requires `program-variables`
     - `program-variables`: Program variables
         - `$PAGER`
         - `$EDITOR`
