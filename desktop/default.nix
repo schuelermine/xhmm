@@ -1,1 +1,1 @@
-{ imports = [ ./gnome ./fonts.nix ]; }
+{ imports = [ ./gnome ./fonts.nix ./autostart.nix ]; }
