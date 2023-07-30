@@ -1,16 +1,19 @@
 { config, lib, ... }:
 with builtins // lib;
 let
-  src = config.xdg.autostart;
-  desktopFile =
+  selectDesktopFile = src:
     if isDerivation src then
       let
         desktopEntries = attrNames (readDir "${src}/share/desktop");
         autostartEntries = attrNames (readDir "${src}/etc/xdg/autostart");
         desktopSelection = selectDesktopEntry desktopEntries;
-      in if length autostartEntries == 1
-      then "${src}/etc/xdg/autostart/${elemAt autostartEntries 0}"
-      else "${src}/share/desktop/${desktopSelection}"
+      in if length autostartEntries == 1 then
+        "${src}/etc/xdg/autostart/${elemAt autostartEntries 0}"
+      else if desktopSelection == null then
+        throw
+        "Could not uniquely determine an autostart desktop entry for ${src.name}"
+      else
+        "${src}/share/desktop/${desktopSelection}"
     else
       src;
   selectDesktopEntry = desktopEntries:
@@ -40,5 +43,8 @@ in {
       If this heuristic fails to identify only one desktop file, you can pass the path to the desktop file directly.
     '';
   };
-  config.xdg.configFile."autostart/${desktopFile}".source = desktopFile;
+  config.xdg.configFile = listToAttrs (map (src: {
+    name = "autostart/${selectDesktopFile}";
+    value.source = selectDesktopFile src;
+  }) config.xdg.autostart);
 }
