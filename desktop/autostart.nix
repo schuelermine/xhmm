@@ -38,7 +38,7 @@ let
       null;
 in {
   options.xdg.autostart = mkOption {
-    type = with types; listOf (either package str);
+    type = with types; listOf (either package path);
     default = [ ];
     defaultText = literalExpression "[ ]";
     example = literalExpression "[ pkgs.valent ]";
