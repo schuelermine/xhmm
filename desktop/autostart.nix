@@ -52,7 +52,10 @@ in {
     '';
   };
   config.xdg.configFile = listToAttrs (map (src: {
-    name = "autostart/${baseNameOf (selectAutostartDesktopFile src)}";
-    value.source = selectAutostartDesktopFile src;
+    name = "${src.name or (baseNameOf src)}-autostart";
+    value = {
+      source = selectAutostartDesktopFile src;
+      target = "autostart/${baseNameOf (selectAutostartDesktopFile src)}";
+    };
   }) config.xdg.autostart);
 }
