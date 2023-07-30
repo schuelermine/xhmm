@@ -1,4 +1,4 @@
-{ config, pkgs, lib }:
+{ config, lib, ... }:
 with builtins // lib;
 let
   src = config.xdg.autostart;

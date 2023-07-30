@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 with lib; {
   options.fonts.fonts = mkOption {
     type = types.listOf types.package;
