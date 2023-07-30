@@ -29,7 +29,7 @@ in {
   options.xdg.autostart = mkOption {
     type = with types; listOf (either package str);
     default = [ ];
-    defaultTest = literalExpression "[ ]";
+    defaultText = literalExpression "[ ]";
     example = literalExpression "[ pkgs.valent ]";
     description = ''
       List of packages or desktop entries that are autostarted.
