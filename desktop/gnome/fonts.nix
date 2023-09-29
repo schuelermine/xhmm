@@ -24,7 +24,9 @@ in {
   };
   config = let cfg = config.gnome;
   in {
-    dconf.settings = {
+    dconf.settings = lib.mkIf (cfg.font != null || cfg.monospaceFont != null
+                               || cfg.documentFont != null || cfg.legacyTitlebarFont != null)
+    {
       "org/gnome/desktop/interface" = {
         font-name = possiblyFontName cfg.font;
         monospace-font-name = possiblyFontName cfg.monospaceFont;

@@ -22,9 +22,11 @@ in {
     };
   };
   config = {
-    dconf.settings."org/gnome/shell" = lib.mkIf (cfg.enable || length cfg.enabledExtensions != 0) {
-      disable-user-extensions = !cfg.enable;
-      enabled-extensions = map (pkg: pkg.extensionUuid) cfg.enabledExtensions;
+    dconf.settings = lib.mkIf (cfg.enable || length cfg.enabledExtensions != 0) {
+      "org/gnome/shell" = {
+        disable-user-extensions = !cfg.enable;
+        enabled-extensions = map (pkg: pkg.extensionUuid) cfg.enabledExtensions;
+      };
     };
     home.packages = cfg.enabledExtensions ++ cfg.extraExtensions;
   };
