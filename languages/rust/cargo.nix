@@ -7,7 +7,9 @@ in {
   options.programs.rust.cargo = {
     enable = mkEnableOption "cargo, the Rust build system";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "cargo" { };
+      mkPackageOption config.programs.rust.toolchainPackages "cargo" {
+        pkgsText = "config.programs.rust.toolchainPackages";
+      };
     settings = mkOption {
       type = types.nullOr tomlFormat.type;
       description = ''

@@ -5,7 +5,9 @@ in {
   options.programs.python.pytest = {
     enable = mkEnableOption "pytest";
     package =
-      mkPackageOption config.programs.python.pythonPackages "pytest" { };
+      mkPackageOption config.programs.python.pythonPackages "pytest" {
+        pkgsText = "config.programs.python.pythonPackages";
+      };
   };
   config = { programs.python.packages = mkIf cfg.enable (_: [ cfg.package ]); };
 }

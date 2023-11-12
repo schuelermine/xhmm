@@ -4,7 +4,9 @@ let cfg = config.programs.rust.rls;
 in {
   options.programs.rust.rls = {
     enable = mkEnableOption "rls, a Rust language server";
-    package = mkPackageOption config.programs.rust.toolchainPackages "rls" { };
+    package = mkPackageOption config.programs.rust.toolchainPackages "rls" {
+      pkgsText = "config.programs.rust.toolchainPackages";
+    };
   };
   config.home.packages = mkIf cfg.enable [ cfg.package ];
 }
