@@ -6,5 +6,5 @@ in {
     enable = mkEnableOption "rustup, the Rust toolchain installer";
     package = mkPackageOption pkgs "rustup" { };
   };
-  config.home.packages = mkIf cfg.enable [ cfg.package ];
+  config.programs.rust.finalPackages = mkIf cfg.enable [ cfg.package ];
 }
