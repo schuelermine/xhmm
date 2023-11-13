@@ -7,7 +7,6 @@ in {
       "the Glorious Glasgow Haskell Compilation System (GHC, the compiler)";
     package = mkPackageOption config.programs.haskell.haskellPackages "GHC" {
       default = [ "ghc" ];
-      pkgsText = "config.programs.haskell.haskellPackages";
     } // {
       apply = pkg:
         if pkg ? withPackages then

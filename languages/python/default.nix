@@ -30,7 +30,6 @@ in {
     enable = mkEnableOption "the Python interpreter";
     package = mkPackageOption cfg.pythonPackages "Python interpreter" {
       default = [ "python" ];
-      pkgsText = "config.programs.python.pythonPackages";
     } // {
       apply = pkg:
         if pkg ? withPackages then

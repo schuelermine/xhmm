@@ -4,8 +4,6 @@ with builtins // lib;
   options.programs.rust.clippy = {
     enable = mkEnableOption "clippy, the Rust linter";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "clippy" {
-        pkgsText = "config.programs.rust.toolchainPackages";
-      };
+      mkPackageOption config.programs.rust.toolchainPackages "clippy" { };
   };
 }

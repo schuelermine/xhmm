@@ -6,9 +6,7 @@ let
 in {
   options.programs.python.pip = {
     enable = mkEnableOption "pip";
-    package = mkPackageOption config.programs.python.pythonPackages "pip" {
-      pkgsText = "config.programs.python.pythonPackages";
-    };
+    package = mkPackageOption config.programs.python.pythonPackages "pip" { };
     settings = mkOption {
       type = types.nullOr iniFormat.type;
       description = ''

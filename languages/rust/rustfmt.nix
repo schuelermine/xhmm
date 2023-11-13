@@ -7,9 +7,7 @@ in {
   options.programs.rust.rustfmt = {
     enable = mkEnableOption "rustfmt, the Rust formatter";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "rustfmt" {
-        pkgsText = "config.programs.rust.toolchainPackages";
-      };
+      mkPackageOption config.programs.rust.toolchainPackages "rustfmt" { };
     settings = mkOption {
       type = types.nullOr tomlFormat.type;
       description = ''
