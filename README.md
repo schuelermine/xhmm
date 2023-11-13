@@ -6,6 +6,9 @@ To import, use either flakes or import a file directly.
 
 You are encouraged to look through the code yourself! All options have been described in the standard way.
 
+Note that many parts of the code are in need of some overhauling. I will be getting to that soon,
+alas I am currently very busy with university.
+
 Current contents:
 
 - `console`: Shell things
