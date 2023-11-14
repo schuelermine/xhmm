@@ -1,9 +1,7 @@
-{ config, pkgs, lib, ... }:
-with builtins // lib;
-{
+{ config, lib, ... }: {
   options.programs.rust.clippy = {
-    enable = mkEnableOption "clippy, the Rust linter";
+    enable = lib.mkEnableOption "clippy, the Rust linter";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "clippy" { };
+      lib.mkPackageOption config.programs.rust.toolchainPackages "clippy" { };
   };
 }

@@ -1,13 +1,13 @@
-{ config, pkgs, lib, ... }:
-with lib; {
-  options.fonts.fonts = mkOption {
-    type = types.listOf types.package;
+{ config, lib, ... }: {
+  options.fonts.fonts = lib.mkOption {
+    type = with lib.types; listOf package;
     default = [ ];
-    defaultText = literalExpression "[ ]";
-    example = literalExpression "[ pkgs.atkinson-hyperlegible ]";
+    defaultText = lib.literalExpression "[ ]";
+    example = lib.literalExpression "[ pkgs.atkinson-hyperlegible ]";
     description = ''
       List of fonts to be available in the user environment.
     '';
   };
-  config.home.packages = mkIf config.fonts.fontconfig.enable config.fonts.fonts;
+  config.home.packages =
+    lib.mkIf config.fonts.fontconfig.enable config.fonts.fonts;
 }

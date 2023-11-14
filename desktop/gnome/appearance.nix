@@ -1,16 +1,15 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let cfg = config.gnome;
 in {
   imports = [
-    (mkAliasOptionModule [ "gnome" "gtkAppTheme" ] [ "gtk" "theme" ])
-    (mkAliasOptionModule [ "gnome" "gtkIconTheme" ] [ "gtk" "iconTheme" ])
+    (lib.mkAliasOptionModule [ "gnome" "gtkAppTheme" ] [ "gtk" "theme" ])
+    (lib.mkAliasOptionModule [ "gnome" "gtkIconTheme" ] [ "gtk" "iconTheme" ])
   ];
-  options.gnome.shellTheme = mkOption {
+  options.gnome.shellTheme = lib.mkOption {
     description = ''
       The custom shell theme to use.
     '';
-    type = with types;
+    type = with lib.types;
       nullOr (submoduleWith {
         modules = [{
           options = {
@@ -21,7 +20,7 @@ in {
               example = literalExpression "pkgs.yaru-theme";
               description = ''
                 Package providing the custom shell theme. This package will be installed to your profile.
-                If <code>null</code> then the custom shell theme is assumed to already be available.
+                If `null` then the custom shell theme is assumed to already be available.
               '';
             };
             name = mkOption {
@@ -37,15 +36,15 @@ in {
       });
     default = null;
   };
-  config = mkMerge [
-    (mkIf (cfg.shellTheme != null) {
+  config = lib.mkMerge [
+    (lib.mkIf (cfg.shellTheme != null) {
       home.packages =
-        mkIf (cfg.shellTheme.package != null) [ cfg.shellTheme.package ];
+        lib.mkIf (cfg.shellTheme.package != null) [ cfg.shellTheme.package ];
       gnome.extensions.enabledExtensions = [ pkgs.gnomeExtensions.user-themes ];
       dconf.settings."org/gnome/shell/extensions/user-theme".name =
         cfg.shellTheme.name;
     })
-    (mkIf (cfg.gtkAppTheme != null || cfg.gtkIconTheme != null) {
+    (lib.mkIf (cfg.gtkAppTheme != null || cfg.gtkIconTheme != null) {
       gtk.enable = true;
     })
   ];

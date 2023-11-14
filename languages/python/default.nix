@@ -1,55 +1,54 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let cfg = config.programs.python;
 in {
   imports = [ ./mypy.nix ./pip.nix ./pytest.nix ];
   options.programs.python = {
-    versionName = mkOption {
-      type = with types; nullOr str;
+    versionName = lib.mkOption {
+      type = with lib.types; nullOr str;
       apply = opt:
-        if opt != null then replaceStrings [ "." ] [ "" ] opt else null;
+        if opt != null then lib.replaceStrings [ "." ] [ "" ] opt else null;
       description = ''
         The Python version to use.
-        Setting this value automatically sets <code>programs.python.pythonPackages</code>.
+        Setting this value automatically sets `programs.python.pythonPackages`.
         The value is automatically stripped of periods to match the nixpkgs naming convention.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression ''"311"'';
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''"311"'';
     };
-    pythonPackages = mkOption {
-      type = types.raw;
+    pythonPackages = lib.mkOption {
+      type = lib.types.raw;
       description = "The Python package set to use.";
       default = if cfg.versionName != null then
         pkgs."python${cfg.versionName}Packages"
       else
         pkgs.python3Packages;
-      defaultText = literalExpression "pkgs.python3Packages";
-      example = literalExpression "pkgs.python311Packages";
+      defaultText = lib.literalExpression "pkgs.python3Packages";
+      example = lib.literalExpression "pkgs.python311Packages";
     };
-    enable = mkEnableOption "the Python interpreter";
-    package = mkPackageOption cfg.pythonPackages "Python interpreter" {
+    enable = lib.mkEnableOption "the Python interpreter";
+    package = lib.mkPackageOption cfg.pythonPackages "Python interpreter" {
       default = [ "python" ];
     } // {
       apply = pkg:
         if pkg ? withPackages then
           pkg.withPackages cfg.packages
         else
-          trace ''
+          lib.trace ''
             You have provided a package as programs.python.package that doesn't have the withPackages function.
             This disables specifying packages via programs.python.packages unless you manually install them.
           '';
     };
-    packages = mkOption {
-      type = with types; functionTo (listOf package);
-      apply = x: if !isFunction x then _: x else x;
+    packages = lib.mkOption {
+      type = with lib.types; functionTo (listOf package);
+      apply = x: if !lib.isFunction x then _: x else x;
       description = ''
         The Python packages to install for the Python interpreter.
       '';
       default = pkgs: [ ];
-      defaultText = literalExpression "pkgs: [ ]";
-      example = literalExpression "pkgs: [ pkgs.requests ]";
+      defaultText = lib.literalExpression "pkgs: [ ]";
+      example = lib.literalExpression "pkgs: [ pkgs.requests ]";
     };
   };
-  config.home.packages = mkIf cfg.enable [ cfg.package ];
+  config.home.packages = lib.mkIf cfg.enable [ cfg.package ];
 }

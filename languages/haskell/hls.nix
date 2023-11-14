@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let
   cfg = config.programs.haskell.hls;
   warning = ''
@@ -9,27 +8,27 @@ let
   '';
 in {
   options.programs.haskell.hls = {
-    enable = mkEnableOption "the Haskell Language Server";
-    package =
-      mkPackageOption pkgs "HLS" { default = [ "haskell-language-server" ]; }
-      // {
-        apply = pkg:
-          if pkg ? override.__functionArgs.supportedGhcVersions then
-            pkg.override {
-              supportedGhcVersions =
-                [ config.programs.haskell.effectiveGhcVersionName ]
-                ++ cfg.extraSupportedGhcVersions;
-            }
-          else
-            trace warning pkg;
-      };
-    extraSupportedGhcVersions = mkOption {
-      type = with types; listOf str;
+    enable = lib.mkEnableOption "the Haskell Language Server";
+    package = lib.mkPackageOption pkgs "HLS" {
+      default = [ "haskell-language-server" ];
+    } // {
+      apply = pkg:
+        if pkg ? override.__functionArgs.supportedGhcVersions then
+          pkg.override {
+            supportedGhcVersions =
+              [ config.programs.haskell.effectiveGhcVersionName ]
+              ++ cfg.extraSupportedGhcVersions;
+          }
+        else
+          lib.trace warning pkg;
+    };
+    extraSupportedGhcVersions = lib.mkOption {
+      type = with lib.types; listOf str;
       description = "The GHC Versions to support with HLS.";
       default = [ ];
-      defaultText = literalExpression "[ ]";
-      example = literalExpression ''[ "902" ]'';
+      defaultText = lib.literalExpression "[ ]";
+      example = lib.literalExpression ''[ "902" ]'';
     };
   };
-  config.home.packages = mkIf cfg.enable [ cfg.package ];
+  config.home.packages = lib.mkIf cfg.enable [ cfg.package ];
 }

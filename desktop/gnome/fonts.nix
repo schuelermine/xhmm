@@ -1,14 +1,13 @@
-{ config, pkgs, lib, ... }:
-with lib;
+{ config, lib, ... }:
 let
   mkFontOption = desc:
-    mkOption {
-      type = types.nullOr hm.types.fontType;
+    lib.mkOption {
+      type = lib.types.nullOr lib.hm.types.fontType;
       default = null;
       description = desc;
     };
   possiblyFontName = font:
-    mkIf (font != null) (font.name
+    lib.mkIf (font != null) (font.name
       + (if font.size != null then " ${builtins.toString font.size}" else ""));
   optionalFontPkg = font:
     if font != null && font.package != null then [ font.package ] else [ ];
@@ -25,17 +24,16 @@ in {
   config = let cfg = config.gnome;
   in {
     dconf.settings = lib.mkIf (cfg.font != null || cfg.monospaceFont != null
-                               || cfg.documentFont != null || cfg.legacyTitlebarFont != null)
-    {
-      "org/gnome/desktop/interface" = {
-        font-name = possiblyFontName cfg.font;
-        monospace-font-name = possiblyFontName cfg.monospaceFont;
-        document-font-name = possiblyFontName cfg.legacyTitlebarFont;
+      || cfg.documentFont != null || cfg.legacyTitlebarFont != null) {
+        "org/gnome/desktop/interface" = {
+          font-name = possiblyFontName cfg.font;
+          monospace-font-name = possiblyFontName cfg.monospaceFont;
+          document-font-name = possiblyFontName cfg.legacyTitlebarFont;
+        };
+        "org/gnome/desktop/wm/preferences".titlebar-font =
+          possiblyFontName cfg.legacyTitlebarFont;
       };
-      "org/gnome/desktop/wm/preferences".titlebar-font =
-        possiblyFontName cfg.legacyTitlebarFont;
-    };
-    fonts.fonts = concatLists (map optionalFontPkg
+    fonts.fonts = lib.concatLists (map optionalFontPkg
       (with cfg; [ font monospaceFont documentFont legacyTitlebarFont ]));
   };
 }

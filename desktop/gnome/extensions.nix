@@ -1,28 +1,27 @@
-{ config, pkgs, lib, ... }:
-with builtins // lib;
+{ config, lib, ... }:
 let cfg = config.gnome.extensions;
 in {
   options.gnome.extensions = {
-    enable = mkEnableOption "GNOME shell extensions" // {
-      default = length cfg.enabledExtensions != 0;
+    enable = lib.mkEnableOption "GNOME shell extensions" // {
+      default = lib.length cfg.enabledExtensions != 0;
     };
-    enabledExtensions = mkOption {
-      type = types.listOf types.package;
+    enabledExtensions = lib.mkOption {
+      type = with lib.types; listOf package;
       default = [ ];
-      defaultText = literalExpression "[ ]";
-      example = literalExpression "[ pkgs.gnomeExtensions.appindicator ]";
+      defaultText = lib.literalExpression "[ ]";
+      example = lib.literalExpression "[ pkgs.gnomeExtensions.appindicator ]";
       description =
         "List of packages that provide extensions that are to be enabled.";
     };
-    extraExtensions = mkOption {
-      type = types.listOf types.package;
+    extraExtensions = lib.mkOption {
+      type = with lib.types; listOf package;
       default = [ ];
-      defaultText = literalExpression "[ ]";
+      defaultText = lib.literalExpression "[ ]";
       description = "Extra extension packages to install (but not enable).";
     };
   };
   config = {
-    dconf.settings = lib.mkIf (cfg.enable || length cfg.enabledExtensions != 0) {
+    dconf.settings = lib.mkIf cfg.enable {
       "org/gnome/shell" = {
         disable-user-extensions = !cfg.enable;
         enabled-extensions = map (pkg: pkg.extensionUuid) cfg.enabledExtensions;

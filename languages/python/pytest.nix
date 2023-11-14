@@ -1,11 +1,12 @@
-{ config, pkgs, lib, ... }:
-with builtins // lib;
+{ config, lib, ... }:
 let cfg = config.programs.python.pytest;
 in {
   options.programs.python.pytest = {
-    enable = mkEnableOption "pytest";
+    enable = lib.mkEnableOption "pytest";
     package =
-      mkPackageOption config.programs.python.pythonPackages "pytest" { };
+      lib.mkPackageOption config.programs.python.pythonPackages "pytest" { };
   };
-  config = { programs.python.packages = mkIf cfg.enable (_: [ cfg.package ]); };
+  config = {
+    programs.python.packages = lib.mkIf cfg.enable (_: [ cfg.package ]);
+  };
 }

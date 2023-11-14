@@ -1,10 +1,9 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let cfg = config.programs.haskell.ghcup;
 in {
   options.programs.haskell.ghcup = {
-    enable = mkEnableOption "ghcup, the Haskell toolchain installer";
-    package = mkPackageOption pkgs "ghcup" { };
+    enable = lib.mkEnableOption "ghcup, the Haskell toolchain installer";
+    package = lib.mkPackageOption pkgs "ghcup" { };
   };
-  config.home.packages = mkIf cfg.enable [ cfg.package ];
+  config.home.packages = lib.mkIf cfg.enable [ cfg.package ];
 }

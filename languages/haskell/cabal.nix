@@ -1,27 +1,27 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let cfg = config.programs.haskell.cabal;
 in {
   options.programs.haskell.cabal = {
-    enable = mkEnableOption "the Haskell Cabal (build system)";
-    package = mkPackageOption pkgs "Cabal" { default = [ "cabal-install" ]; };
-    config = mkOption {
-      type = with types; nullOr lines;
+    enable = lib.mkEnableOption "the Haskell Cabal (build system)";
+    package =
+      lib.mkPackageOption pkgs "Cabal" { default = [ "cabal-install" ]; };
+    config = lib.mkOption {
+      type = with lib.types; nullOr lines;
       description = ''
-        The contents of the <code>.cabal/config</code> file.
-        If set to <code>null</code>, no file will be generated.
+        The contents of the `.cabal/config` file.
+        If set to `null`, no file will be generated.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression ''
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''
         '''
           executable-stripping: True
         '''
       '';
     };
   };
-  config.home = mkIf cfg.enable {
+  config.home = lib.mkIf cfg.enable {
     packages = [ cfg.package ];
-    file.".cabal/config" = mkIf (cfg.config != null) { text = cfg.config; };
+    file.".cabal/config" = lib.mkIf (cfg.config != null) { text = cfg.config; };
   };
 }

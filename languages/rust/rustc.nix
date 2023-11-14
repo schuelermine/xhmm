@@ -1,9 +1,7 @@
-{ config, pkgs, lib, ... }:
-with builtins // lib;
-{
+{ config, lib, ... }: {
   options.programs.rust.rustc = {
-    enable = mkEnableOption "rustc, the Rust compiler";
+    enable = lib.mkEnableOption "rustc, the Rust compiler";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "rustc" { };
+      lib.mkPackageOption config.programs.rust.toolchainPackages "rustc" { };
   };
 }

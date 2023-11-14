@@ -1,30 +1,29 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let
   cfg = config.programs.rust.cargo;
   tomlFormat = pkgs.formats.toml { };
 in {
   options.programs.rust.cargo = {
-    enable = mkEnableOption "cargo, the Rust build system";
+    enable = lib.mkEnableOption "cargo, the Rust build system";
     package =
-      mkPackageOption config.programs.rust.toolchainPackages "cargo" { };
-    settings = mkOption {
-      type = types.nullOr tomlFormat.type;
+      lib.mkPackageOption config.programs.rust.toolchainPackages "cargo" { };
+    settings = lib.mkOption {
+      type = lib.types.nullOr tomlFormat.type;
       description = ''
-        Configuration written to <code>$HOME/.cargo/config.toml</code>.
-        If set to <code>null</code>, no file will be generated.
+        Configuration written to `$HOME/.cargo/config.toml`.
+        If set to `null`, no file will be generated.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression ''
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''
         {
           cargo-new.vcs = "pijul";
         }
       '';
     };
   };
-  config.home = mkIf cfg.enable {
-    file.".cargo/config.toml" = mkIf (cfg.settings != null) {
+  config.home = lib.mkIf cfg.enable {
+    file.".cargo/config.toml" = lib.mkIf (cfg.settings != null) {
       source = tomlFormat.generate "cargo-config" cfg.settings;
     };
   };

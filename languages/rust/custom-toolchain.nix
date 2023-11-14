@@ -1,19 +1,18 @@
 { config, pkgs, lib, ... }:
-with builtins // lib;
 let
   outerCfg = config.programs.rust;
   cfg = config.programs.rust.customToolchain;
   components = (if cfg.components == null then [ ] else cfg.components)
-    ++ optional outerCfg.cargo.enable "cargo"
-    ++ optional outerCfg.clippy.enable "clippy"
-    ++ optional outerCfg.rustc.enable "rustc"
-    ++ optional outerCfg.rustfmt.enable "rustfmt";
+    ++ lib.optional outerCfg.cargo.enable "cargo"
+    ++ lib.optional outerCfg.clippy.enable "clippy"
+    ++ lib.optional outerCfg.rustc.enable "rustc"
+    ++ lib.optional outerCfg.rustfmt.enable "rustfmt";
   toolchainBuilderStructuredArgs.toolchain =
-    optionalAttrs (cfg.channel != null) { inherit (cfg) channel; }
-    // optionalAttrs (components != [ ]) { inherit components; }
-    // optionalAttrs (cfg.targets != null) { inherit (cfg) targets; }
-    // optionalAttrs (cfg.targets != null) { inherit (cfg) targets; }
-    // optionalAttrs (cfg.profile != null) { inherit (cfg) profile; };
+    lib.optionalAttrs (cfg.channel != null) { inherit (cfg) channel; }
+    // lib.optionalAttrs (components != [ ]) { inherit components; }
+    // lib.optionalAttrs (cfg.targets != null) { inherit (cfg) targets; }
+    // lib.optionalAttrs (cfg.targets != null) { inherit (cfg) targets; }
+    // lib.optionalAttrs (cfg.profile != null) { inherit (cfg) profile; };
   toolchainBuilderArgs = if cfg.config == null then
     if cfg.format == "path" then
       "${toTOML toolchainBuilderStructuredArgs}"
@@ -22,7 +21,7 @@ let
   else if cfg.format == "path" then
     cfg.config
   else
-    fromTOML (readFile cfg.config);
+    fromTOML (lib.readFile cfg.config);
   toolchain = if cfg.toolchainPackage == null then
     cfg.builder toolchainBuilderArgs
   else
@@ -31,97 +30,98 @@ let
   toTOML = tomlFormat.generate "rust-toolchain";
 in {
   options.programs.rust.customToolchain = {
-    toolchainPackage = mkOption {
-      type = with types; nullOr package;
+    toolchainPackage = lib.mkOption {
+      type = with lib.types; nullOr package;
       description = ''
         A toolchain package to install.
-        Disables <code>programs.rust.customToolchain.builder</code>.
+        Disables `programs.rust.customToolchain.builder`.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression "fenix.stable.toolchain";
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression "fenix.stable.toolchain";
     };
-    builder = mkOption {
-      type = with types; nullOr (functionTo raw);
+    builder = lib.mkOption {
+      type = with lib.types; nullOr (functionTo raw);
       description = ''
         A custom toolchain builder that takes a TOML toolchain specification
-        and returns a derivation to be installed. Set to <code>null</code> to disable.
-        This takes either <code>programs.rust.customToolchain.config</code> or an
+        and returns a derivation to be installed. Set to `null` to disable.
+        This takes either `programs.rust.customToolchain.config` or an
         attribute set composed of most other options there. Use
-        <code>programs.rust.customToolchain.format</code> to specify how it should be passed.
+        `programs.rust.customToolchain.format` to specify how it should be passed.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression
         ''file: fenix.fromToolchainFile { inherit file; sha256 = "" }'';
     };
-    format = mkOption {
-      type = types.enum [ "attrs" "path" ];
+    format = lib.mkOption {
+      type = lib.types.enum [ "attrs" "path" ];
       description = ''
-        The format that <code>programs.rust.customToolchain.builder</code> takes its argument in.
-        Can be either <code>"attrs"</code> or <code>"path"</code>.
+        The format that `programs.rust.customToolchain.builder` takes its argument in.
+        Can be either `"attrs"` or `"path"`.
       '';
       default = if cfg.config == null then "attrs" else "path";
-      defaultText = literalExpression ''"attrs"'';
-      example = literalExpression ''"path"'';
+      defaultText = lib.literalExpression ''"attrs"'';
+      example = lib.literalExpression ''"path"'';
     };
-    channel = mkOption {
-      type = with types; nullOr str;
+    channel = lib.mkOption {
+      type = with lib.types; nullOr str;
       description = ''
-        <code>channel</code> field of TOML toolchain specification.
+        `channel` field of TOML toolchain specification.
         Null to disable.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression ''"nightly-2020-07-10"'';
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''"nightly-2020-07-10"'';
     };
-    components = mkOption {
-      type = with types; nullOr (listOf str);
+    components = lib.mkOption {
+      type = with lib.types; nullOr (listOf str);
       description = ''
-        Extra elements for the <code>components</code> field of the TOML toolchain specification.
+        Extra elements for the `components` field of the TOML toolchain specification.
         Null to disable.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression ''[ "rustfmt" "rustc-dev" ]'';
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''[ "rustfmt" "rustc-dev" ]'';
     };
-    targets = mkOption {
-      type = with types; nullOr (listOf str);
+    targets = lib.mkOption {
+      type = with lib.types; nullOr (listOf str);
       description = ''
-        <code>targets</code> field of TOML toolchain specification.
+        `targets` field of TOML toolchain specification.
         Null to disable.
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example =
-        literalExpression ''[ "wasm32-unknown-unknown" "thumbv2-none-eabi" ]'';
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression
+        ''[ "wasm32-unknown-unknown" "thumbv2-none-eabi" ]'';
     };
-    profile = mkOption {
-      type = with types; enum [ "minimal" "default" "complete" ];
+    profile = lib.mkOption {
+      type = with lib.types; enum [ "minimal" "default" "complete" ];
       description = ''
         The base toolchain profile.
-        Can be <code>"minimal"</code>, <code>"default"</code>, or <code>"complete"</code>.
+        Can be `"minimal"`, `"default"`, or `"complete"`.
       '';
       default = "default";
-      defaultText = literalExpression ''"default"'';
-      example = literalExpression ''"minimal"'';
+      defaultText = lib.literalExpression ''"default"'';
+      example = lib.literalExpression ''"minimal"'';
     };
-    config = mkOption {
-      type = with types; nullOr (either path str);
+    config = lib.mkOption {
+      type = with lib.types; nullOr (either path str);
       description = ''
-        The path to a <code>rust-toolchain.toml</code> or similar.
-        Disables <code>programs.rust.customToolchain.profile</code> and <code>programs.rust.customToolchain.components</code>,
-        and sets <code>programs.rust.customToolchain.format</code> to <code>"path"</code> (can be overridden).
+        The path to a `rust-toolchain.toml` or similar.
+        Disables `programs.rust.customToolchain.profile` and `programs.rust.customToolchain.components`,
+        and sets `programs.rust.customToolchain.format` to `"path"` (can be overridden).
       '';
       default = null;
-      defaultText = literalExpression "null";
-      example = literalExpression "./rust-toolchain.toml";
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression "./rust-toolchain.toml";
     };
-    customEnabled = mkOption {
-      type = with types; bool;
+    customEnabled = lib.mkOption {
+      type = with lib.types; bool;
       internal = true;
       default = cfg.builder != null || cfg.toolchainPackage != null;
     };
   };
-  config.programs.rust.finalPackages = mkIf (cfg.customEnabled) [ toolchain ];
+  config.programs.rust.finalPackages =
+    lib.mkIf (cfg.customEnabled) [ toolchain ];
 }
