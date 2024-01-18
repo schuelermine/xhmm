@@ -75,12 +75,40 @@ in {
         lib.literalExpression
         ''"${config.xdg.configHome}/pythonrc.py"'';
     };
+    historyPath = lib.mkOption {
+      type = with lib.types; nullOr path;
+      description = ''
+        Python interpreter history file path. See
+        <https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_HISTORY>
+        for details.
+        This option is only available in Python 3.13.
+      '';
+      default = null;
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''
+        "${config.xdg.stateHome}/python_history"
+      '';
+    };
+    enableColors =
+      lib.mkEnableOption ''
+        colors in the interpreter. See
+        <https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_COLORS>
+        for details.
+        This option is only available in Python 3.13.
+      ''
+      // {default = true;};
   };
   config.home = {
     packages = lib.mkIf cfg.enable [cfg.package];
-    sessionVariables = lib.mkIf (cfg.config != null) {
-      PYTHONSTARTUP = cfg.configPath;
-    };
+    sessionVariables = lib.mkMerge [
+      (lib.mapAttrs
+        (_: toString)
+        (lib.filterAttrs (_: var: var != [] && var != null) {
+          PYTHONSTARTUP = cfg.configPath;
+          PYTHON_HISTORY = cfg.historyPath;
+        }))
+      (lib.mkIf (!cfg.enableColors) {PYTHON_COLORS = "-1";})
+    ];
     file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
       text = ''
         """Python interpreter configuration file.
