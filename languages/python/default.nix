@@ -63,15 +63,18 @@ in {
       '';
     };
     configPath = lib.mkOption {
-      type = with lib.types; nullOr path;
+      type = lib.types.path;
       description = ''
         Python interpreter startup configuration file path. See
         <https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP>
         for details.
       '';
-      default = null;
-      defaultText = lib.literalExpression "null";
-      example = lib.literalExpression ''"${config.xdg.configHome}/startup.py"'';
+      default = "${config.home.homeDirectory}/.config/python/startup.py";
+      defaultText = lib.literalExpression
+        ''"''${config.home.homeDirectory}/.config/python/startup.py"'';
+      example = lib.literalExpression ''
+        import numpy as np
+      '';
     };
     historyPath = lib.mkOption {
       type = with lib.types; nullOr path;
@@ -98,13 +101,15 @@ in {
   };
   config.home = {
     packages = lib.mkIf cfg.enable [ cfg.package ];
-    sessionVariables = {
-      PYTHONSTARTUP = with cfg;
-        lib.mkIf (config != null && configPath != null) (toString configPath);
-      PYTHON_HISTORY =
-        lib.mkIf (cfg.historyPath != null) (toString cfg.historyPath);
-      PYTHON_COLORS = if cfg.enableColors then "0" else "1";
-    };
+    sessionVariables = lib.mkMerge [
+      (lib.mkIf (cfg.config != null) {
+        PYTHONSTARTUP = toString cfg.configPath;
+      })
+      (lib.mkIf (cfg.historyPath != null) {
+        PYTHON_HISTORY = toString cfg.historyPath;
+      })
+      { PYTHON_COLORS = if cfg.enableColors then "0" else "1"; }
+    ];
     file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
       source = if builtins.isPath cfg.config then
         cfg.config
