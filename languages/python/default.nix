@@ -100,15 +100,11 @@ in {
   };
   config.home = {
     packages = lib.mkIf cfg.enable [cfg.package];
-    sessionVariables = lib.mkMerge [
-      (lib.mapAttrs
-        (_: toString)
-        (lib.filterAttrs (_: var: var != [] && var != null) {
-          PYTHONSTARTUP = cfg.configPath;
-          PYTHON_HISTORY = cfg.historyPath;
-        }))
-      (lib.mkIf (!cfg.enableColors) {PYTHON_COLORS = "-1";})
-    ];
+    sessionVariables = {
+      PYTHONSTARTUP = lib.mkIf (cfg.configPath != null) (toString cfg.configPath);
+      PYTHON_HISTORY = lib.mkIf (cfg.historyPath != null) (toString cfg.historyPath);
+      PYTHON_COLORS = if cfg.enableColors then "0" else "1";
+    };
     file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
       text = ''
         # DO NOT EDIT -- this file has been generated automatically.
