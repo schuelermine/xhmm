@@ -50,7 +50,7 @@ in {
       example = lib.literalExpression "pkgs: [ pkgs.requests ]";
     };
     config = lib.mkOption {
-      type = with lib.types; nullOr lines;
+      type = with lib.types; nullOr (either path lines);
       description = ''
         Python interpreter startup configuration. See
         <https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP>
@@ -63,17 +63,15 @@ in {
       '';
     };
     configPath = lib.mkOption {
-      type = lib.types.path;
+      type = with lib.types; nullOr path;
       description = ''
         Python interpreter startup configuration file path. See
         <https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP>
         for details.
       '';
-      default = "${config.xdg.configHome}/python/startup.py";
-      defaultText = "$XDG_CONFIG_HOME/python/startup.py";
-      example =
-        lib.literalExpression
-        ''"${config.xdg.configHome}/pythonrc.py"'';
+      default = null;
+      defaultText = lib.literalExpression "null";
+      example = lib.literalExpression ''"${config.xdg.configHome}/startup.py"'';
     };
     historyPath = lib.mkOption {
       type = with lib.types; nullOr path;
@@ -101,17 +99,21 @@ in {
   config.home = {
     packages = lib.mkIf cfg.enable [cfg.package];
     sessionVariables = {
-      PYTHONSTARTUP = lib.mkIf (cfg.configPath != null) (toString cfg.configPath);
+      PYTHONSTARTUP = with cfg;
+        lib.mkIf (config != null && configPath != null) (toString configPath);
       PYTHON_HISTORY = lib.mkIf (cfg.historyPath != null) (toString cfg.historyPath);
       PYTHON_COLORS = if cfg.enableColors then "0" else "1";
     };
     file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
-      text = ''
-        # DO NOT EDIT -- this file has been generated automatically.
-        # Python interpreter startup commands, generated via home-manager.
+      source = if builtins.isPath cfg.config then
+        cfg.config
+      else
+        pkgs.writeText "python/startup.py" ''
+          # DO NOT EDIT -- this file has been generated automatically.
+          # Python interpreter startup commands, generated via home-manager.
 
-        ${cfg.config}
-      '';
+          ${cfg.config}
+        '';
     };
   };
 }
