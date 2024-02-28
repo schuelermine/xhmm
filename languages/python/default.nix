@@ -69,7 +69,12 @@ in {
         <https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP>
         for details.
       '';
-      default = "${config.home.homeDirectory}/.config/python/startup.py";
+      default = "${
+          if config.xdg.enable then
+            config.xdg.configHome
+          else
+            "${config.home.homeDirectory}/.config"
+        }/python/startup.py";
       defaultText = lib.literalExpression
         ''"''${config.home.homeDirectory}/.config/python/startup.py"'';
       example = lib.literalExpression ''
