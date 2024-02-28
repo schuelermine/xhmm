@@ -62,7 +62,7 @@ in {
         import numpy as np
       '';
     };
-    configPath = lib.mkOption {
+    configFile = lib.mkOption {
       type = lib.types.path;
       description = ''
         Python interpreter startup configuration file path. See
@@ -95,13 +95,13 @@ in {
     packages = lib.mkIf cfg.enable [ cfg.package ];
     sessionVariables = lib.mkMerge [
       (lib.mkIf (cfg.config != null) {
-        PYTHONSTARTUP = toString cfg.configPath;
+        PYTHONSTARTUP = toString cfg.configFile;
       })
       (lib.mkIf (cfg.historyPath != null) {
         PYTHON_HISTORY = toString cfg.historyPath;
       })
     ];
-    file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
+    file."${cfg.configFile}" = lib.mkIf (cfg.config != null) {
       source = if builtins.isPath cfg.config then
         cfg.config
       else
