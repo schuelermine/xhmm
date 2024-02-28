@@ -90,14 +90,6 @@ in {
         "${config.xdg.stateHome}/python_history"
       '';
     };
-    enableColors = lib.mkEnableOption ''
-      colors in the interpreter. See
-      <https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_COLORS>
-      for details.
-      This option is only available in Python 3.13.
-    '' // {
-      default = true;
-    };
   };
   config.home = {
     packages = lib.mkIf cfg.enable [ cfg.package ];
@@ -108,7 +100,6 @@ in {
       (lib.mkIf (cfg.historyPath != null) {
         PYTHON_HISTORY = toString cfg.historyPath;
       })
-      { PYTHON_COLORS = if cfg.enableColors then "0" else "1"; }
     ];
     file."${cfg.configPath}" = lib.mkIf (cfg.config != null) {
       source = if builtins.isPath cfg.config then
