@@ -8,7 +8,7 @@ in {
     config = lib.mkOption {
       type = with lib.types; nullOr lines;
       description = ''
-        The contents of the `.cabal/config` file.
+        The contents of the `$XDG_CONFIG_HOME/cabal/config` file.
         If set to `null`, no file will be generated.
       '';
       default = null;
@@ -20,8 +20,8 @@ in {
       '';
     };
   };
-  config.home = lib.mkIf cfg.enable {
-    packages = [ cfg.package ];
-    file.".cabal/config" = lib.mkIf (cfg.config != null) { text = cfg.config; };
+  config = lib.mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+    xdg.configFile."cabal/config" = lib.mkIf (cfg.config != null) { text = cfg.config; };
   };
 }
