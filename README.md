@@ -39,7 +39,7 @@ Current contents:
         - Mypy
         - Pip
         - Pytest
-    - `rust`: Rust
+    - `rust`: Rust (note that you may need to also have a CC installed)
         - Cargo
         - Clippy
         - RLS
