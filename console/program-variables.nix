@@ -21,7 +21,7 @@ let
     { config, ... }:
     let
       cfg = config.home.${optionName};
-      moduleType = lib.submoduleWith {
+      moduleType = lib.types.submoduleWith {
         modules = [{
           options = {
             package = lib.mkOption {
