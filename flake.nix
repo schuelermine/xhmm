@@ -15,7 +15,6 @@
       };
       console = {
         all = import ./console;
-        less = import ./console/less.nix;
         nano = import ./console/nano.nix;
         program-variables = import ./console/program-variables.nix;
         fish = import ./console/fish;

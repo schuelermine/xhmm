@@ -11,8 +11,6 @@ Current contents:
 - `console`: Shell things
     - `fish`: Fish
         - Fish prompt
-    - `less`: More options for `less`
-        - ⚠️ Requires `program-variables`
     - `nano`: More options for `nano`
         - ⚠️ Requires `program-variables`
     - `program-variables`: Program variables
